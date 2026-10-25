@@ -27,7 +27,7 @@ export interface EventFormValues {
   preferences: string;
 }
 
-export type ParseResult = { ok: true; input: EventInput } | { ok: false; errors: FormErrors };
+type ParseResult = { ok: true; input: EventInput } | { ok: false; errors: FormErrors };
 
 /** Removes control characters, collapses whitespace and enforces a maximum length. */
 export function sanitizeText(value: string, maxLength: number): string {

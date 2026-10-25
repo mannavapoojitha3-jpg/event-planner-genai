@@ -3,6 +3,7 @@ import { BudgetPanel } from './BudgetPanel';
 import { TimelinePanel } from './TimelinePanel';
 import { VendorChecklist } from './VendorChecklist';
 import { ChatPanel } from './ChatPanel';
+import { nextTabIndex } from './tabNavigation';
 import { formatDate } from '../engine/dates';
 import { formatINR } from '../engine/money';
 import type { CategoryId, ChatMessage, EventPlan, VendorStatus } from '../engine/types';
@@ -43,11 +44,7 @@ export function Dashboard({
 
   /** Arrow keys, Home and End move between tabs, as the WAI-ARIA tabs pattern expects. */
   function handleTabKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
-    let next: number | null = null;
-    if (event.key === 'ArrowRight') next = (index + 1) % TABS.length;
-    else if (event.key === 'ArrowLeft') next = (index - 1 + TABS.length) % TABS.length;
-    else if (event.key === 'Home') next = 0;
-    else if (event.key === 'End') next = TABS.length - 1;
+    const next = nextTabIndex(event.key, index, TABS.length);
     if (next === null) return;
     event.preventDefault();
     setTab(TABS[next].id);

@@ -4,7 +4,7 @@ import type { CategoryId, EventType } from './types';
  * Rough planning estimates in INR. These are illustrative defaults for budgeting,
  * NOT verified market prices. The UI labels every figure derived from this table as an estimate.
  */
-export interface CostRule {
+interface CostRule {
   fixed: number;
   perGuest: number;
   defaultPercent: number;

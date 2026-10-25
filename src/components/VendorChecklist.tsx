@@ -11,6 +11,13 @@ const STATUS_LABEL: Record<VendorStatus, string> = {
   booked: 'Booked',
 };
 
+const STATUSES = Object.keys(STATUS_LABEL) as VendorStatus[];
+
+/** Narrows a form value to a known status, so nothing unexpected reaches the plan. */
+function isVendorStatus(value: string): value is VendorStatus {
+  return (STATUSES as readonly string[]).includes(value);
+}
+
 export function VendorChecklist({ vendors, onStatusChange }: VendorChecklistProps) {
   const booked = vendors.filter((vendor) => vendor.status === 'booked').length;
   const requiredOpen = vendors.filter((vendor) => vendor.required && vendor.status !== 'booked').length;
@@ -47,9 +54,11 @@ export function VendorChecklist({ vendors, onStatusChange }: VendorChecklistProp
             <select
               id={`status-${vendor.id}`}
               value={vendor.status}
-              onChange={(e) => onStatusChange(vendor.id, e.target.value as VendorStatus)}
+              onChange={(e) => {
+                if (isVendorStatus(e.target.value)) onStatusChange(vendor.id, e.target.value);
+              }}
             >
-              {(Object.keys(STATUS_LABEL) as VendorStatus[]).map((status) => (
+              {STATUSES.map((status) => (
                 <option key={status} value={status}>
                   {STATUS_LABEL[status]}
                 </option>

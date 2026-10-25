@@ -16,7 +16,7 @@ export interface EventInput {
   preferences: string;
 }
 
-export interface BudgetRow {
+interface BudgetRow {
   id: CategoryId;
   label: string;
   percent: number;

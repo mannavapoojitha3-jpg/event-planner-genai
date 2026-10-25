@@ -1,4 +1,4 @@
-import { useId, useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { parseEventForm, LIMITS, type EventFormValues } from '../engine/validate';
 import type { EventInput, FormErrors } from '../engine/types';
 import { todayIso } from '../engine/dates';
@@ -74,8 +74,15 @@ export function EventForm({ initial, onSubmit, onCancel }: EventFormProps) {
   const [values, setValues] = useState<EventFormValues>(() => toFormValues(initial));
   const [errors, setErrors] = useState<FormErrors>({});
   const formId = useId();
+  const formRef = useRef<HTMLFormElement>(null);
   const today = todayIso();
   const errorCount = Object.keys(errors).length;
+
+  // After a failed submit, move focus to the first invalid field so keyboard and screen reader users land on the problem.
+  useEffect(() => {
+    if (errorCount === 0) return;
+    formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+  }, [errors, errorCount]);
 
   function update<K extends keyof EventFormValues>(field: K, value: EventFormValues[K]) {
     setValues((current) => ({ ...current, [field]: value }));
@@ -101,7 +108,7 @@ export function EventForm({ initial, onSubmit, onCancel }: EventFormProps) {
   };
 
   return (
-    <form className="card form" onSubmit={handleSubmit} noValidate aria-labelledby={`${formId}-heading`}>
+    <form ref={formRef} className="card form" onSubmit={handleSubmit} noValidate aria-labelledby={`${formId}-heading`}>
       <h2 id={`${formId}-heading`}>Tell us about your event</h2>
       {errorCount > 0 && (
         <div className="error-summary" role="alert">

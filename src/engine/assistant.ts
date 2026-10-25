@@ -6,7 +6,7 @@ import { applyInput } from './planner';
 import { LIMITS } from './validate';
 import type { CategoryId, EventPlan, Idea, IdeaArea } from './types';
 
-export interface AssistantResult {
+interface AssistantResult {
   plan: EventPlan;
   reply: string;
 }
