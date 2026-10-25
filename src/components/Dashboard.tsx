@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState, type KeyboardEvent } from 'react';
 import { BudgetPanel } from './BudgetPanel';
 import { TimelinePanel } from './TimelinePanel';
 import { VendorChecklist } from './VendorChecklist';
@@ -38,7 +38,21 @@ export function Dashboard({
   messages,
 }: DashboardProps) {
   const [tab, setTab] = useState<TabId>('overview');
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const { input } = plan;
+
+  /** Arrow keys, Home and End move between tabs, as the WAI-ARIA tabs pattern expects. */
+  function handleTabKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+    let next: number | null = null;
+    if (event.key === 'ArrowRight') next = (index + 1) % TABS.length;
+    else if (event.key === 'ArrowLeft') next = (index - 1 + TABS.length) % TABS.length;
+    else if (event.key === 'Home') next = 0;
+    else if (event.key === 'End') next = TABS.length - 1;
+    if (next === null) return;
+    event.preventDefault();
+    setTab(TABS[next].id);
+    tabRefs.current[next]?.focus();
+  }
 
   return (
     <div className="dashboard">
@@ -56,9 +70,12 @@ export function Dashboard({
       </header>
 
       <div role="tablist" aria-label="Plan sections" className="tabs">
-        {TABS.map((item) => (
+        {TABS.map((item, index) => (
           <button
             key={item.id}
+            ref={(element) => {
+              tabRefs.current[index] = element;
+            }}
             id={`tab-${item.id}`}
             type="button"
             role="tab"
@@ -67,6 +84,7 @@ export function Dashboard({
             tabIndex={tab === item.id ? 0 : -1}
             className={`tab${tab === item.id ? ' tab--active' : ''}`}
             onClick={() => setTab(item.id)}
+            onKeyDown={(event) => handleTabKeyDown(event, index)}
           >
             {item.label}
           </button>

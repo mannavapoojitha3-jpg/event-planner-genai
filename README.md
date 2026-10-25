@@ -58,5 +58,7 @@ src/
 - **Rule-based assistant.** Plans come from deterministic rules rather than a language model. This keeps the app free to host, private, and predictable. The assistant reads budget, guest, allocation, checklist, idea and vendor requests from plain text.
 - **Estimates are labelled.** Every cost figure is described as an estimate, and the model's assumptions live in one file (`costs.ts`) so they are easy to review.
 - **Input handling.** Form values are parsed and sanitised before use, with explicit limits. Chat input is length-limited and whitespace-normalised. React escapes all rendered text.
-- **Accessibility.** Labelled controls, `aria-describedby` for hints and errors, a live region for chat replies, visible focus styles, and text (not just colour) for status.
-- **Testing.** Run `npm test`. The suite covers budget arithmetic and its boundaries, validation limits, date handling, timeline regeneration, and assistant parsing.
+- **Accessibility.** Labelled controls, `aria-describedby` for hints and errors, a skip link, arrow-key navigation between tabs, a live region for chat replies, visible focus styles, and text (not just colour) for status.
+- **Saved data is validated.** A plan read back from the browser is checked field by field, including dates, ranges, percentage totals and list sizes. Anything malformed is discarded rather than partly used.
+- **Content Security Policy.** The production build sends a strict policy (same-origin scripts, styles and fonts only, no frames or plugins).
+- **Testing.** Run `npm test` (90 tests). The suite covers budget arithmetic and its boundaries, validation limits, stored-data checks, date handling, timeline regeneration, assistant parsing, and rendering of key screens.

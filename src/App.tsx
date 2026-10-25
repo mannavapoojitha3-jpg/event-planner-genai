@@ -58,6 +58,9 @@ export default function App() {
 
   return (
     <div className="app">
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
       <header className="site-header">
         <button type="button" className="brand" onClick={() => setView(plan ? 'dashboard' : 'landing')}>
           EventPlanner AI
@@ -83,7 +86,7 @@ export default function App() {
         )}
       </header>
 
-      <main id="main" className="container">
+      <main id="main" tabIndex={-1} className="container">
         {view === 'landing' && <Landing onStart={() => setView('setup')} />}
 
         {view === 'setup' && (
